@@ -25,6 +25,9 @@ class Family(SQLModel, table=True):
     type_plant: TypePlant = Relationship(back_populates="families")
     fruit: list["Fruit"] = Relationship(back_populates="family")
     
+    def __repr__(self):
+        return f"<Family {self.name}>"
+    
     config = {
         "schema_extra": {
             "example": {

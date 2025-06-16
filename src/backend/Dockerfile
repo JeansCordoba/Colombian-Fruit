@@ -31,4 +31,4 @@ EXPOSE 8000
 # --host 0.0.0.0: permite conexiones desde fuera del contenedor
 # --port 8000: puerto donde se ejecutará la aplicación
 # --reload: recarga automáticamente cuando hay cambios en el código
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"] 
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"] 

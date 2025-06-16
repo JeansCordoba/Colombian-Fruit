@@ -12,6 +12,9 @@ class TypePlant(SQLModel, table=True):
     # Relaciones
     families: list["Family"] = Relationship(back_populates="type_plant")
     
+    def __repr__(self):
+        return f"<TypePlant {self.name}>"
+    
     config = {
         "schema_extra": {
             "example": {

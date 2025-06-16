@@ -36,6 +36,9 @@ class Fruit(SQLModel, table=True):
     family: Family = Relationship(back_populates="fruits")
     regions: list["Region"] = Relationship(back_populates="fruits", link_model=FruitRegion)
     
+    def __repr__(self):
+        return f"<Fruit {self.common_name}>"
+    
     config = {
         "schema_extra": {
             "example": {

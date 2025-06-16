@@ -16,6 +16,10 @@ class Department(SQLModel, table=True):
     
     # Relaciones
     region: Region = Relationship(back_populates="departments")
+    
+    def __repr__(self):
+        return f"<Department {self.name}>"
+    
     config = {
         "schema_extra": {
             "example": {

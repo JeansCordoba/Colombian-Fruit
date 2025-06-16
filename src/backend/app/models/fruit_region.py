@@ -14,7 +14,9 @@ class FruitRegion(SQLModel, table=True):
         foreign_key="Region.region_id"
     )
     
-
+    def __repr__(self):
+        return f"<FruitRegion {self.fruit_id} - {self.region_id}>"
+    
     config = {
         "schema_extra": {
             "example": {
