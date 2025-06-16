@@ -1,0 +1,31 @@
+services:
+  api-colombian-fruits:
+    build:
+      context: ./src/backend
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "8000:8000"
+    image: api-colombian-fruits
+    container_name: colombian-fruits
+    depends_on:
+      - colombian-fruits-db 
+    volumes:
+      - ./src/backend:/app
+  
+  colombian-fruits-db:
+    image: postgres
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - colombian-fruits-data:/var/lib/postgresql/data
+
+volumes:
+  colombian-fruits-data:
+      
