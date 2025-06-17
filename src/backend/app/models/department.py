@@ -1,8 +1,7 @@
 from sqlmodel import Field, SQLModel, Relationship
-from .region import Region
 
 class Department(SQLModel, table=True):
-    department_id: int = Field(primary_key=True, autoincrement=True, nullable=False)
+    department_id: int = Field(primary_key=True, nullable=False)
     name: str = Field(
         min_length=3,
         max_length=50,
@@ -15,16 +14,7 @@ class Department(SQLModel, table=True):
     )
     
     # Relaciones
-    region: Region = Relationship(back_populates="departments")
+    region: "Region" = Relationship(back_populates="departments")
     
     def __repr__(self):
         return f"<Department {self.name}>"
-    
-    config = {
-        "schema_extra": {
-            "example": {
-                "name": "Chocó",
-                "region_id": 2
-            }
-        }
-    }

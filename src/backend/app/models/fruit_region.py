@@ -1,27 +1,17 @@
-from sqlmodel import Field, SQLModel, Relationship
-from .fruit import Fruit
-from .region import Region
+from sqlmodel import Field, SQLModel
 
 class FruitRegion(SQLModel, table=True):
     fruit_id: int = Field(
-        gt=0,
-        description="ID de la fruta",
-        foreign_key="Fruit.fruit_id"
+        primary_key=True,
+        foreign_key="Fruit.fruit_id",
+        description="ID de la fruta"
     )
     region_id: int = Field(
-        gt=0,
-        description="ID de la región",
-        foreign_key="Region.region_id"
+        primary_key=True,
+        foreign_key="Region.region_id",
+        description="ID de la región"
     )
     
     def __repr__(self):
         return f"<FruitRegion {self.fruit_id} - {self.region_id}>"
     
-    config = {
-        "schema_extra": {
-            "example": {
-                "fruit_id": 1,
-                "region_id": 1
-            }
-        }
-    }

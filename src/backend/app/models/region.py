@@ -1,10 +1,7 @@
 from sqlmodel import Field, SQLModel, Relationship
-from .fruit import Fruit
 from .fruit_region import FruitRegion
-from .department import Department
-
 class Region(SQLModel, table=True):
-    region_id: int = Field(primary_key=True, autoincrement=True, nullable=False)
+    region_id: int = Field(primary_key=True, nullable=False)
     name: str = Field(
         min_length=3,
         max_length=50,
@@ -28,13 +25,3 @@ class Region(SQLModel, table=True):
     
     def __repr__(self):
         return f"<Region {self.name}>"
-    
-    config = {
-        "schema_extra": {
-            "example": {
-                "name": "Pacífico",
-                "weather": "Templado",
-                "altitude": 1000
-            }
-        }
-    }

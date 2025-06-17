@@ -1,9 +1,7 @@
 from sqlmodel import Field, SQLModel, Relationship
-from .type_plant import TypePlant
-from .fruit import Fruit
 
 class Family(SQLModel, table=True):
-    family_id: int = Field(primary_key=True, autoincrement=True, nullable=False)
+    family_id: int = Field(primary_key=True, nullable=False)
     name: str = Field(
         min_length=3,
         max_length=50,
@@ -22,18 +20,9 @@ class Family(SQLModel, table=True):
     )
     
     # Relaciones
-    type_plant: TypePlant = Relationship(back_populates="families")
+    type_plant: "TypePlant" = Relationship(back_populates="families")
     fruit: list["Fruit"] = Relationship(back_populates="family")
     
     def __repr__(self):
         return f"<Family {self.name}>"
     
-    config = {
-        "schema_extra": {
-            "example": {
-                "name": "Solanaceae",
-                "type_plant_id": 1,
-                "description": "Información de la familia"
-            }
-        }
-    }

@@ -1,0 +1,63 @@
+from app.db.database import get_session
+from app.models import Department, Region
+from fastapi import HTTPException
+from sqlmodel import select
+
+class DepartmentService:
+    def create_department(department):
+        with get_session() as session:
+            exist_region = session.exec(select(Region).where(Region.region_id == department.region_id)).first()
+            if not exist_region:
+                raise HTTPException(status_code=404, detail="Region not found")
+            new_department = Department(**department.model_dump())
+            session.add(new_department)
+            session.commit()
+            session.refresh(new_department)
+            return new_department
+    
+    def get_all_departments():
+        with get_session() as session:
+            departments = session.exec(select(Department)).all()
+            return departments
+        
+    def get_department_by_id(department_id: int):
+        with get_session() as session:
+            department = session.exec(select(Department).where(Department.department_id == department_id)).first()
+            if not department:
+                raise HTTPException(status_code=404, detail="Department not found")
+            return department
+        
+    def get_departments(search):
+        with get_session() as session:
+            query = select(Department)
+            if search.department_id:
+                query = query.where(Department.department_id == search.department_id)
+            if search.name:
+                query = query.where(Department.name == search.name)
+            if search.region_id:
+                query = query.where(Department.region_id == search.region_id)
+            return query.all()
+
+    def update_department(department_id: int, update_data):
+        with get_session() as session:
+            department = session.exec(select(Department).where(Department.department_id == department_id)).first()
+            exist_region = session.exec(select(Region).where(Region.region_id == update_data.region_id)).first()
+            if not exist_region:
+                raise HTTPException(status_code=404, detail="Region not found")
+            if not department:
+                raise HTTPException(status_code=404, detail="Department not found")
+            department_data = update_data.model_dump()
+            session.exec(select(Department).where(Department.department_id == department_id)).update(department_data)
+            session.commit()
+            session.refresh(department)
+            return department
+        
+    def delete_department(department_id: int):
+        with get_session() as session:
+            department = session.exec(select(Department).where(Department.department_id == department_id)).first()
+            if not department:
+                raise HTTPException(status_code=404, detail="Department not found")
+            session.delete(department)
+            session.commit()
+            return {"message": "Department deleted successfully"}
+        

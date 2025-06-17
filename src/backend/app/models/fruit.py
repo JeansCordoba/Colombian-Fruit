@@ -1,10 +1,8 @@
 from sqlmodel import Field, SQLModel, Relationship
-from .family import Family
-from .region import Region
 from .fruit_region import FruitRegion
 
 class Fruit(SQLModel, table=True):
-    fruit_id: int = Field(primary_key=True, autoincrement=True, nullable=False)
+    fruit_id: int = Field(primary_key=True, nullable=False)
     common_name: str = Field(
         min_length=3,
         max_length=50,
@@ -33,20 +31,9 @@ class Fruit(SQLModel, table=True):
     )
     
     # Relaciones
-    family: Family = Relationship(back_populates="fruits")
+    family: "Family" = Relationship(back_populates="fruits")
     regions: list["Region"] = Relationship(back_populates="fruits", link_model=FruitRegion)
     
     def __repr__(self):
         return f"<Fruit {self.common_name}>"
     
-    config = {
-        "schema_extra": {
-            "example": {
-                "common_name": "Lulo",
-                "scientific_name": "Solanum quitoense",
-                "family_id": 1,
-                "season": "Todo el año",
-                "description": "Fruta ácida y refrescante típica de Colombia..."
-            }
-        }
-    }
