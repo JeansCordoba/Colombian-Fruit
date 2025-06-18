@@ -2,15 +2,21 @@ from app.db.database import get_session
 from app.models import Department, Region
 from fastapi import HTTPException
 from sqlmodel import select
+from .region_service import RegionService
 
 class DepartmentService:
     def create_department(department):
         with get_session() as session:
-            exist_region = session.exec(select(Region).where(Region.region_id == department.region_id)).first()
-            if not exist_region:
-                raise HTTPException(status_code=404, detail="Region not found")
-            if department.name == session.exec(select(Department).where(Department.name == department.name)).first():
-                raise HTTPException(status_code=400, detail="Department already exists")
+            # Obtener todos los departamentos
+            exist_department = session.exec(select(Department)).all()
+            normalized_new_name = RegionService.remove_accents(department.name.lower())
+            # Verificar si el departamento existe
+            for exist_department in exist_department:
+                if RegionService.remove_accents(exist_department.name.lower()) == normalized_new_name:
+                    raise HTTPException(status_code=400, detail="Department already exists")
+            # Verificar si la región existe
+            RegionService.get_region_by_id(department.region_id)
+            
             new_department = Department(**department.model_dump())
             session.add(new_department)
             session.commit()
