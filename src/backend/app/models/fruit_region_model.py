@@ -3,12 +3,12 @@ from sqlmodel import Field, SQLModel
 class FruitRegion(SQLModel, table=True):
     fruit_id: int = Field(
         primary_key=True,
-        foreign_key="Fruit.fruit_id",
+        foreign_key="fruit.fruit_id",
         description="ID de la fruta"
     )
     region_id: int = Field(
         primary_key=True,
-        foreign_key="Region.region_id",
+        foreign_key="region.region_id",
         description="ID de la región"
     )
     

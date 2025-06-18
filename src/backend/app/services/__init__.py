@@ -1,3 +1,4 @@
-from .department import DepartmentService
- 
-__all__ = ["DepartmentService"] 
+from .department_service import DepartmentService
+from .region_service import RegionService
+
+__all__ = ["DepartmentService", "RegionService"] 

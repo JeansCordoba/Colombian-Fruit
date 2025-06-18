@@ -11,7 +11,7 @@ class Family(SQLModel, table=True):
     type_plant_id: int = Field(
         gt=0,
         description="ID del tipo de planta de la familia",
-        foreign_key="TypePlant.type_plant_id"
+        foreign_key="typeplant.type_plant_id"
     )
     description: str = Field(
         min_length=3,
@@ -20,8 +20,7 @@ class Family(SQLModel, table=True):
     )
     
     # Relaciones
-    type_plant: "TypePlant" = Relationship(back_populates="families")
-    fruit: list["Fruit"] = Relationship(back_populates="family")
+    fruits: list["Fruit"] = Relationship(back_populates="family")
     
     def __repr__(self):
         return f"<Family {self.name}>"

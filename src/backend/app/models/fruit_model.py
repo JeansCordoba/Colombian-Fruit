@@ -1,5 +1,5 @@
 from sqlmodel import Field, SQLModel, Relationship
-from .fruit_region import FruitRegion
+from .fruit_region_model import FruitRegion
 
 class Fruit(SQLModel, table=True):
     fruit_id: int = Field(primary_key=True, nullable=False)
@@ -17,7 +17,7 @@ class Fruit(SQLModel, table=True):
     family_id: int = Field(
         gt=0,
         description="ID de la familia de la fruta",
-        foreign_key="Family.family_id"
+        foreign_key="family.family_id"
     )
     season: str = Field(
         min_length=3,
@@ -32,7 +32,14 @@ class Fruit(SQLModel, table=True):
     
     # Relaciones
     family: "Family" = Relationship(back_populates="fruits")
-    regions: list["Region"] = Relationship(back_populates="fruits", link_model=FruitRegion)
+    regions: list["Region"] = Relationship(
+        back_populates="fruits",
+        link_model=FruitRegion,
+        sa_relationship_kwargs={
+            "primaryjoin": "Fruit.fruit_id == FruitRegion.fruit_id",
+            "secondaryjoin": "Region.region_id == FruitRegion.region_id"
+        }
+    )
     
     def __repr__(self):
         return f"<Fruit {self.common_name}>"

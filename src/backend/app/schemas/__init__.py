@@ -1,15 +1,27 @@
-from .department import (
+from .department_schema import (
     DepartmentBase,
     DepartmentCreate,
-    DepartmentRead,
+    DepartmentResponse,
     DepartmentUpdate,
     DepartmentSearch
+)
+from .region_schema import (
+    RegionBase,
+    RegionCreate,
+    RegionResponse,
+    RegionUpdate,
+    RegionSearch
 )
 
 __all__ = [
     "DepartmentBase",
     "DepartmentCreate",
-    "DepartmentRead",
+    "DepartmentResponse",
     "DepartmentUpdate",
-    "DepartmentSearch"
+    "DepartmentSearch",
+    "RegionBase",
+    "RegionCreate",
+    "RegionResponse",
+    "RegionUpdate",
+    "RegionSearch"
 ] 

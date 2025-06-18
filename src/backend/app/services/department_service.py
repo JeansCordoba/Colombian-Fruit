@@ -9,6 +9,8 @@ class DepartmentService:
             exist_region = session.exec(select(Region).where(Region.region_id == department.region_id)).first()
             if not exist_region:
                 raise HTTPException(status_code=404, detail="Region not found")
+            if department.name == session.exec(select(Department).where(Department.name == department.name)).first():
+                raise HTTPException(status_code=400, detail="Department already exists")
             new_department = Department(**department.model_dump())
             session.add(new_department)
             session.commit()
@@ -33,10 +35,13 @@ class DepartmentService:
             if search.department_id:
                 query = query.where(Department.department_id == search.department_id)
             if search.name:
-                query = query.where(Department.name == search.name)
+                query = query.where(Department.name.ilike(f"%{search.name}%"))
             if search.region_id:
                 query = query.where(Department.region_id == search.region_id)
-            return query.all()
+            departments = query.all()
+            if not departments:
+                raise HTTPException(status_code=404, detail="No departments found")
+            return departments
 
     def update_department(department_id: int, update_data):
         with get_session() as session:
@@ -59,5 +64,5 @@ class DepartmentService:
                 raise HTTPException(status_code=404, detail="Department not found")
             session.delete(department)
             session.commit()
-            return {"message": "Department deleted successfully"}
+
         
