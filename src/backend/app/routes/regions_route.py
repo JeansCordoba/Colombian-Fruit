@@ -1,34 +1,34 @@
 from fastapi import APIRouter, Path, Body
-from app.schemas import RegionCreate, RegionUpdate, RegionSearch, RegionResponse
-from app.services import RegionService
+from ..schemas import RegionCreate, RegionUpdate, RegionSearch, RegionResponse
+from ..services import RegionService
 
 router = APIRouter()
 
-@router.get("/regions", response_model=list[RegionResponse])
+@router.get("/", response_model=list[RegionResponse])
 async def get_regions():
     regions = RegionService.get_all_regions()
     return regions
 
-@router.get("/regions/{region_id}", response_model=RegionResponse)
+@router.get("/{region_id}", response_model=RegionResponse)
 async def get_region(region_id: int = Path(gt=0)):
     region = RegionService.get_region_by_id(region_id)
     return region
 
-@router.get("/regions/search", response_model=list[RegionResponse])
+@router.get("/search", response_model=list[RegionResponse])
 async def search_regions(search: RegionSearch = Body(...)):
-    regions = RegionService.get_regions(search)
+    regions = RegionService.search_regions(search)
     return regions
 
-@router.post("/regions", response_model=RegionResponse)
+@router.post("/", response_model=RegionResponse)
 async def create_region(region: RegionCreate = Body(...)):
     region = RegionService.create_region(region)
     return region
 
-@router.patch("/regions/{region_id}", response_model=RegionResponse)
+@router.patch("/{region_id}", response_model=RegionResponse)
 async def update_region(region_id: int = Path(gt=0), update_data: RegionUpdate = Body(...)):
     region = RegionService.update_region(region_id, update_data)
     return region
 
-@router.delete("/regions/{region_id}", status_code=204)
+@router.delete("/{region_id}", status_code=204)
 async def delete_region(region_id: int = Path(gt=0)):
     RegionService.delete_region(region_id)
