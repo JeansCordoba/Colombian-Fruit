@@ -137,13 +137,13 @@ POSTGRES_HOST=database
 ### Iniciar el proyecto
 ```bash
 # Desarrollo
-docker-compose up -d
+docker-compose up --build
 
 # Ver logs
 docker-compose logs -f api-colombian-fruits
 
 # Detener
-docker-compose down
+docker-compose stop
 ```
 
 ### Acceder a la documentación
