@@ -17,7 +17,7 @@ async def get_departments():
 
 @router.get("/detail", response_model=list[DepartmentDetailResponse])
 async def get_departments_detail():
-    departments = DepartmentService.get_all_departments_detail()
+    departments = DepartmentService.get_all_departments()
     return departments
 
 @router.get("/{department_id}", response_model=DepartmentResponse)

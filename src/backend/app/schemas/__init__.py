@@ -2,6 +2,7 @@ from .department_schema import (
     DepartmentBase,
     DepartmentCreate,
     DepartmentResponse,
+    DepartmentDetailResponse,
     DepartmentUpdate,
     DepartmentSearch
 )
@@ -34,10 +35,12 @@ from .fruit_schema import (
     FruitSearch
 )
 
+
 __all__ = [
     "DepartmentBase",
     "DepartmentCreate",
     "DepartmentResponse",
+    "DepartmentDetailResponse",
     "DepartmentUpdate",
     "DepartmentSearch",
     "RegionBase",
