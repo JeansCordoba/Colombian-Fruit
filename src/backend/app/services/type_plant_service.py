@@ -7,6 +7,13 @@ from sqlmodel import select
 
 class TypePlantService:
     @staticmethod
+    def _serialize_type_plant(type_plant):
+        return {
+            "type_plant_id": type_plant.type_plant_id,
+            "name": type_plant.name
+        }
+    
+    @staticmethod
     def create_type_plant(type_plant):
         with get_session() as session:
             existing_type_plants = session.exec(select(TypePlant)).all()
@@ -18,20 +25,21 @@ class TypePlantService:
             session.add(new_type_plant)
             session.commit()
             session.refresh(new_type_plant)
-            return new_type_plant
+            return TypePlantService._serialize_type_plant(new_type_plant)
         
     @staticmethod
     def get_all_type_plants():
         with get_session() as session:
-            return session.exec(select(TypePlant)).all()
+            type_plants = session.exec(select(TypePlant)).all()
+            return [TypePlantService._serialize_type_plant(type_plant) for type_plant in type_plants]
         
     @staticmethod
     def get_type_plant_by_id(type_plant_id: int):
         with get_session() as session:
-            result = session.exec(select(TypePlant).where(TypePlant.type_plant_id == type_plant_id)).first()
-            if not result:
+            type_plant = session.exec(select(TypePlant).where(TypePlant.type_plant_id == type_plant_id)).first()
+            if not type_plant:
                 raise HTTPException(status_code=404, detail="Type plant not found")
-            return result
+            return TypePlantService._serialize_type_plant(type_plant)
         
     @staticmethod
     def search_type_plants(search):
@@ -44,13 +52,13 @@ class TypePlantService:
             type_plants = query.all()
             if not type_plants:
                 raise HTTPException(status_code=404, detail="No type plants found")
-            return type_plants
+            return [TypePlantService._serialize_type_plant(type_plant) for type_plant in type_plants]
         
     @staticmethod
     def update_type_plant(type_plant_id: int, update_data):
         with get_session() as session:
-            result = session.exec(select(TypePlant).where(TypePlant.type_plant_id == type_plant_id)).first()
-            if not result:
+            type_plant = session.exec(select(TypePlant).where(TypePlant.type_plant_id == type_plant_id)).first()
+            if not type_plant:
                 raise HTTPException(status_code=404, detail="Type plant not found")
             if update_data.name:
                 normalized_new_name = Utilities.remove_accents(update_data.name.lower())
@@ -60,14 +68,14 @@ class TypePlantService:
             type_plant_data = update_data.model_dump()
             session.exec(select(TypePlant).where(TypePlant.type_plant_id == type_plant_id)).update(type_plant_data)
             session.commit()
-            session.refresh(result)
-            return result
+            session.refresh(type_plant)
+            return TypePlantService._serialize_type_plant(type_plant)
         
     @staticmethod
     def delete_type_plant(type_plant_id: int):
         with get_session() as session:
-            result = session.exec(select(TypePlant).where(TypePlant.type_plant_id == type_plant_id)).first()
-            if not result:
+            type_plant = session.exec(select(TypePlant).where(TypePlant.type_plant_id == type_plant_id)).first()
+            if not type_plant:
                 raise HTTPException(status_code=404, detail="Type plant not found")
-            session.delete(result)
+            session.delete(type_plant)
             session.commit()

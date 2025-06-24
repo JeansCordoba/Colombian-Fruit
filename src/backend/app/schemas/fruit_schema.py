@@ -38,6 +38,49 @@ class FruitCreate(FruitBase):
 
 class FruitResponse(FruitBase):
     fruit_id: int = Field(gt=0, description="ID de la fruta")
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "summary": "Datos de fruta (vista de BD)",
+                    "description": "Muestra los datos de una fruta como vista de la base de datos",
+                    "value": {
+                        "fruit_id": 1,
+                        "common_name": "Manzana",
+                        "scientific_name": "Malus domestica",
+                        "family_id": 1,
+                        "season": "Invierno",
+                        "description": "La manzana es una fruta de color rojo brillante y textura suave."
+                    }
+                }
+            ]
+        }
+    }
+
+class FruitDetailResponse(BaseModel):
+    common_name: str = Field(description="Nombre común de la fruta")
+    scientific_name: str = Field(description="Nombre científico de la fruta")
+    family_name: str = Field(description="Nombre de la familia de la fruta")
+    season: str = Field(description="Estación de la fruta")
+    description: str = Field(description="Descripción de la fruta")
+    model_config = {
+        "extra": "ignore",
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "summary": "Datos de fruta (vista de usuario)",
+                    "description": "Muestra los datos de el nombre común, nombre científico, nombre de la familia, estación y descripción de la fruta",
+                    "value": {
+                        "common_name": "Manzana",
+                        "scientific_name": "Malus domestica",
+                        "family_name": "Malus",
+                        "season": "Invierno",
+                        "description": "La manzana es una fruta de color rojo brillante y textura suave."
+                    }
+                }
+            ]
+        }
+    }
 
 class FruitSearch(OptionalField):
     fruit_id: Optional[int] = Field(gt=0)

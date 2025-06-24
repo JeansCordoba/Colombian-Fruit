@@ -6,7 +6,7 @@ from ..services import DepartmentService
 router = APIRouter()
 
 @router.post("/", response_model=DepartmentResponse)
-async def create_department(department: DepartmentCreate):
+async def create_department(department: DepartmentCreate = Body(...)):
     department = DepartmentService.create_department(department)
     return department
 

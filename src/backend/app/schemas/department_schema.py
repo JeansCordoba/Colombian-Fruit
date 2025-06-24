@@ -2,15 +2,6 @@ from pydantic import BaseModel, Field
 from typing import Optional
 from fastapi import HTTPException
 
-class DepartmentBase(BaseModel):
-    name: str = Field(min_length=3, max_length=50, description="Nombre del departamento")
-    region_id: int = Field(gt=0, description="ID de la región del departamento")
-    
-    model_config = {
-        "extra": "forbid",
-    }
-
-
 class OptionalField(BaseModel):
     def __init__(self, **data):
         super().__init__(**data)
@@ -20,7 +11,15 @@ class OptionalField(BaseModel):
     model_config = {
         "extra": "ignore",
     }
+
+class DepartmentBase(BaseModel):
+    name: str = Field(min_length=3, max_length=50, description="Nombre del departamento")
+    region_id: int = Field(gt=0, description="ID de la región del departamento")
     
+    model_config = {
+        "extra": "forbid",
+    }
+
 class DepartmentCreate(DepartmentBase):
     model_config = {
         "json_schema_extra": {

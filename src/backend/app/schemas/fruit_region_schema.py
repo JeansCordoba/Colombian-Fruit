@@ -9,7 +9,41 @@ class FruitRegionBase(BaseModel):
     }
     
 class FruitRegionResponse(FruitRegionBase):
-    pass
+    model_config = {
+        "extra": "ignore",
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "summary": "Datos de fruta en una región (vista de BD)",
+                    "description": "Muestra los datos de una fruta en una región como vista de la base de datos",
+                    "value": {
+                        "fruit_id": 1,
+                        "region_id": 1,
+                    }
+                }
+            ]
+        }
+    }
+
+class FruitRegionDetailResponse(BaseModel):
+    fruit_name: str = Field(description="Nombre de la fruta")
+    region_name: str = Field(description="Nombre de la región")
+    
+    model_config = {
+        "extra": "ignore",
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "summary": "Datos de fruta en una región (vista de usuario)",
+                    "description": "Muestra los datos de el nombre de la fruta y el nombre de la región a la que pertenece",
+                    "value": {
+                        "fruit_name": "Manzana",
+                        "region_name": "Chocó",
+                    }
+                }
+            ]
+        }
+    }
     
 class FruitRegionCreate(FruitRegionBase):
     model_config = {
@@ -26,7 +60,3 @@ class FruitRegionCreate(FruitRegionBase):
             ]
         }
     }
-
-    
-    
-    

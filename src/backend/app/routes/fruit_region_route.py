@@ -1,19 +1,21 @@
 from fastapi import APIRouter, Path, Body
-from ..schemas import FruitRegionCreate, FruitRegionResponse
+from ..schemas import FruitRegionCreate, FruitRegionResponse, FruitRegionDetailResponse
 from ..services import FruitRegionService
 
 router = APIRouter()
 
 @router.post("/", response_model=FruitRegionResponse)
-async def create_fruit_region(fruit_region: FruitRegionCreate = Body(...)):
-    """
-    Crear una relación entre una fruta y una región
-    """
+async def add_region_to_fruit(fruit_region: FruitRegionCreate = Body(...)):
     return FruitRegionService.create_fruit_region(fruit_region)
+
+@router.get("/", response_model=list[FruitRegionResponse])
+async def get_all_fruit_regions():
+    return FruitRegionService.get_all_fruit_regions()
+
+@router.get("/detail", response_model=list[FruitRegionDetailResponse])
+async def get_all_fruit_regions_detail():
+    return FruitRegionService.get_all_fruit_regions()
 
 @router.delete("/", status_code=204)
 async def delete_fruit_region(fruit_id: int = Path(gt=0), region_id: int = Path(gt=0)):
-    """
-    Eliminar la relación entre una fruta y una región
-    """
     FruitRegionService.delete_fruit_region(fruit_id, region_id) 

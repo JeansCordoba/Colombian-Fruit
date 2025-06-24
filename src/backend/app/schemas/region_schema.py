@@ -31,11 +31,48 @@ class RegionCreate(RegionBase):
             ]
         }
     }
-    pass
 
 class RegionResponse(RegionBase):
     region_id: int = Field(gt=0)
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "summary": "Datos de región (vista de BD)",
+                    "description": "Muestra los datos de una región como vista de la base de datos",
+                    "value": {
+                        "region_id": 1,
+                        "name": "Andes",
+                        "weather": "Templado",
+                        "altitude": 1000
+                    }
+                }
+            ]
+        }
+    }
+
+class RegionDetailResponse(BaseModel):
+    name: str = Field(description="Nombre de la región")
+    weather: str = Field(description="Clima de la región")
+    altitude: int = Field(description="Altura de la región en metros")
+    model_config = {
+        "extra": "ignore",
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "summary": "Datos de región (vista de usuario)",
+                    "description": "Muestra los datos de el nombre, clima y altitud de la región",
     
+                    "value": {
+                        "name": "Andes",
+                        "weather": "Templado",
+                        "altitude": 1000
+                    }
+                }
+            ]
+        }
+    }
+
 class RegionUpdate(OptionalField):
     name: Optional[str] = Field(min_length=3, max_length=50)
     weather: Optional[str] = Field(min_length=3, max_length=50)

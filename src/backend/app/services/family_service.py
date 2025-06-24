@@ -6,6 +6,15 @@ from sqlmodel import select
 
 class FamilyService:
     @staticmethod
+    def _serialize_family(family):
+        return {
+            "family_id": family.family_id,
+            "name": family.name,
+            "type_plant_id": family.type_plant_id,
+            "description": family.description
+        }
+    
+    @staticmethod
     def create_family(family):
         with get_session() as session:
             existing_families = session.exec(select(Family)).all()
@@ -19,12 +28,13 @@ class FamilyService:
             session.add(new_family)
             session.commit()
             session.refresh(new_family)
-            return new_family
+            return FamilyService._serialize_family(new_family)
         
     @staticmethod
     def get_all_families():
         with get_session() as session:
-            return session.exec(select(Family)).all()
+            families = session.exec(select(Family)).all()
+            return [FamilyService._serialize_family(family) for family in families]
         
     @staticmethod
     def get_family_by_id(family_id: int):
@@ -32,7 +42,7 @@ class FamilyService:
             result = session.exec(select(Family).where(Family.family_id == family_id)).first()
             if not result:
                 raise HTTPException(status_code=404, detail="Family not found")
-            return result
+            return FamilyService._serialize_family(result)
         
     @staticmethod
     def search_families(search):
@@ -47,7 +57,7 @@ class FamilyService:
             families = query.all()
             if not families:
                 raise HTTPException(status_code=404, detail="No families found")
-            return families
+            return [FamilyService._serialize_family(family) for family in families]
         
     @staticmethod
     def update_family(family_id: int, update_data):
@@ -67,7 +77,7 @@ class FamilyService:
             session.exec(select(Family).where(Family.family_id == family_id)).update(family_data)
             session.commit()
             session.refresh(result)
-            return result
+            return FamilyService._serialize_family(result)
         
     @staticmethod
     def delete_family(family_id: int):

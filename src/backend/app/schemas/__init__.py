@@ -34,6 +34,12 @@ from .fruit_schema import (
     FruitUpdate,
     FruitSearch
 )
+from .fruit_region_schema import (
+    FruitRegionBase,
+    FruitRegionCreate,
+    FruitRegionResponse,
+    FruitRegionDetailResponse
+)
 
 
 __all__ = [
@@ -62,5 +68,9 @@ __all__ = [
     "FruitCreate",
     "FruitResponse",
     "FruitUpdate",
-    "FruitSearch"
+    "FruitSearch",
+    "FruitRegionBase",
+    "FruitRegionCreate",
+    "FruitRegionResponse",
+    "FruitRegionDetailResponse"
 ] 

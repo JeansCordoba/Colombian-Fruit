@@ -8,9 +8,13 @@ class OptionalField(BaseModel):
         super().__init__(**data)
         if all(value is None for value in data.values()):
             raise HTTPException(status_code=400, detail="At least one field must be provided")
+        
+    model_config = {
+        "extra": "ignore",
+    }
 
 class FamilyBase(BaseModel):
-    name: str = Field(index=True)
+    name: str = Field(min_length=3, max_length=50, description="Nombre de la familia")
     type_plant_id: int = Field(gt=0, description="ID del tipo de planta de la familia")
     description: str = Field(min_length=3, max_length=1000, description="Descripción de la familia")
 
@@ -37,10 +41,49 @@ class FamilyCreate(FamilyBase):
     
 class FamilyResponse(FamilyBase):
     family_id: int = Field(gt=0)
+    model_config = {
+        "extra": "ignore",
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "summary": "Datos de familia (vista de BD)",
+                    "description": "Muestra los datos de una familia como vista de la base de datos",
+                    "value": {
+                        "family_id": 1,
+                        "name": "Familia de las frutas",
+                        "type_plant_id": 1,
+                        "description": "Descripción de la familia"
+                    }
+                }
+            ]
+        }
+    }
+    
+class FamilyDetailResponse(BaseModel):
+    name: str = Field(description="Nombre de la familia")
+    type_plant_name: str = Field(description="Nombre del tipo de planta")
+    description: str = Field(description="Descripción de la familia")
+    
+    model_config = {
+        "extra": "ignore",
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "summary": "Datos de familia (vista de usuario)",
+                    "description": "Muestra los datos de el nombre de la familia y el tipo de planta a la que pertenece",
+                    "value": {
+                        "name": "Familia de las frutas",
+                        "type_plant_name": "Árbol",
+                        "description": "Descripción de la familia"
+                    }
+                }
+            ]
+        }
+    }   
   
 class FamilySearch(OptionalField):
     family_id: Optional[int] = Field(gt=0)
-    name: Optional[str] = Field(index=True)
+    name: Optional[str] = Field(min_length=3, max_length=50)
     type_plant_id: Optional[int] = Field(gt=0)
     
     model_config = {
@@ -72,7 +115,7 @@ class FamilySearch(OptionalField):
     }
 
 class FamilyUpdate(OptionalField):
-    name: Optional[str] = Field(index=True)
+    name: Optional[str] = Field(min_length=3, max_length=50)
     type_plant_id: Optional[int] = Field(gt=0)
     description: Optional[str] = Field(min_length=3, max_length=1000)
     

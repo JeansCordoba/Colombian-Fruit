@@ -1,10 +1,20 @@
 from ..db import get_session
 from ..models import Region
 from ..utilities import Utilities
+from .fruit_region_service import FruitRegionService
 from fastapi import HTTPException
 from sqlmodel import select
 
 class RegionService:
+    @staticmethod
+    def _serialize_region(region):
+        return {
+            "region_id": region.region_id,
+            "name": region.name,
+            "weather": region.weather,
+            "altitude": region.altitude
+        }
+        
     @staticmethod
     def create_region(region):
         with get_session() as session:
@@ -17,13 +27,13 @@ class RegionService:
             session.add(new_region)
             session.commit()
             session.refresh(new_region)
-            return new_region
+            return RegionService._serialize_region(new_region)
         
     @staticmethod
     def get_all_regions():
         with get_session() as session:
             regions = session.exec(select(Region)).all()
-            return regions
+            return [RegionService._serialize_region(region) for region in regions]
         
     @staticmethod
     def get_region_by_id(region_id: int):
@@ -31,7 +41,11 @@ class RegionService:
             region = session.exec(select(Region).where(Region.region_id == region_id)).first()
             if not region:
                 raise HTTPException(status_code=404, detail="Region not found")
-            return region
+            return RegionService._serialize_region(region)
+        
+    @staticmethod
+    def get_region_fruits(region_id: int):
+        return FruitRegionService.get_all_fruits_by_region(region_id)
         
     @staticmethod
     def search_regions(search):
@@ -48,7 +62,7 @@ class RegionService:
             regions = query.all()
             if not regions:
                 raise HTTPException(status_code=404, detail="No regions found")
-            return regions
+            return [RegionService._serialize_region(region) for region in regions]
 
     @staticmethod
     def update_region(region_id: int, update_data):
@@ -65,7 +79,7 @@ class RegionService:
             session.exec(select(Region).where(Region.region_id == region_id)).update(region_data)
             session.commit()
             session.refresh(region)
-            return region
+            return RegionService._serialize_region(region)
     
     @staticmethod
     def delete_region(region_id: int):
