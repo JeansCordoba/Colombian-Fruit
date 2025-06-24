@@ -126,9 +126,10 @@ docker-compose up -d
 ### Variables de Entorno (.env)
 ```env
 # Base de datos
-POSTGRES_USER=colombian_fruits
+POSTGRES_USER=your_user
 POSTGRES_PASSWORD=your_password
 POSTGRES_DB=colombian_fruits_db
+POSTGRES_HOST=database
 ```
 
 ## 📖 Uso
@@ -136,13 +137,13 @@ POSTGRES_DB=colombian_fruits_db
 ### Iniciar el proyecto
 ```bash
 # Desarrollo
-docker-compose up -d
+docker-compose up --build
 
 # Ver logs
 docker-compose logs -f api-colombian-fruits
 
 # Detener
-docker-compose down
+docker-compose stop
 ```
 
 ### Acceder a la documentación
