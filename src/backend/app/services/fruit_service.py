@@ -14,6 +14,7 @@ class FruitService:
             "common_name": fruit.common_name,
             "scientific_name": fruit.scientific_name,
             "family_id": fruit.family_id,
+            "family_name": fruit.family.name,
             "season": fruit.season,
             "description": fruit.description
         }

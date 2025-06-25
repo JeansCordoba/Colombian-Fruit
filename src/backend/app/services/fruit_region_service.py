@@ -13,8 +13,8 @@ class FruitRegionService:
             return {
                 "fruit_id": data.fruit_id,
                 "region_id": data.region_id,
-                "name_fruit": fruit.common_name,
-                "name_region": region.name
+                "fruit_name": fruit.common_name,
+                "region_name": region.name
             }
     
     @staticmethod

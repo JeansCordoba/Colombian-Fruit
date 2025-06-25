@@ -1,3 +1,3 @@
 from .utility import Utilities
-
-__all__ = ["Utilities"]
+from .seed import Seed
+__all__ = ["Utilities", "Seed"]

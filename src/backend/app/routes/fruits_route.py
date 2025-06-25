@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Path, Body
-from ..schemas import FruitCreate, FruitResponse, FruitSearch, FruitUpdate, FruitDetailResponse, FruitRegionResponse, FruitRegionDetailResponse
+from ..schemas import FruitCreate, FruitResponse, FruitSearch, FruitUpdate, FruitDetailResponse, FruitRegionResponse, FruitRegionDetailResponse, FruitRegionCreate
 from ..services import FruitService
 
 router = APIRouter()
