@@ -9,11 +9,11 @@ class OptionalField(BaseModel):
             raise HTTPException(status_code=400, detail="At least one field must be provided")
 
 class FruitBase(BaseModel):
-    common_name: str = Field(min_length=3, max_length=50, description="Nombre común de la fruta")
-    scientific_name: str = Field(min_length=3, max_length=50, description="Nombre científico de la fruta")
-    family_id: int = Field(gt=0, description="ID de la familia de la fruta")
-    season: str = Field(min_length=3, max_length=50, description="Estación de la fruta")
-    description: str = Field(min_length=3, max_length=1000, description="Descripción de la fruta")
+    common_name: str = Field(min_length=3, max_length=50, description="Common name of the fruit")
+    scientific_name: str = Field(min_length=3, max_length=50, description="Scientific name of the fruit")
+    family_id: int = Field(gt=0, description="ID of the family of the fruit")
+    season: str = Field(min_length=3, max_length=50, description="Season of the fruit")
+    description: str = Field(min_length=3, max_length=1000, description="Description of the fruit")
 
 class FruitCreate(FruitBase):
     model_config = {
@@ -21,14 +21,14 @@ class FruitCreate(FruitBase):
         "json_schema_extra": {
             "examples": [
                 {
-                    "summary": "Crear una fruta",
-                    "description": "Crear una fruta con los siguientes datos",
+                    "summary": "Create a fruit",
+                    "description": "Create a fruit with the following data",
                     "value": {
-                        "common_name": "Manzana",
+                        "common_name": "Apple",
                         "scientific_name": "Malus domestica",
                         "family_id": 1,
-                        "season": "Invierno",
-                        "description": "La manzana es una fruta de color rojo brillante y textura suave."
+                        "season": "Winter",
+                        "description": "The apple is a red and soft fruit."
                     }
                 }
             ]
@@ -37,50 +37,28 @@ class FruitCreate(FruitBase):
     pass
 
 class FruitResponse(FruitBase):
-    fruit_id: int = Field(gt=0, description="ID de la fruta")
+    fruit_id: int = Field(gt=0, description="ID of the fruit")
+    family_name: str = Field(min_length=3, max_length=50, description="Name of the family of the fruit")
     model_config = {
         "json_schema_extra": {
             "examples": [
                 {
-                    "summary": "Datos de fruta (vista de BD)",
-                    "description": "Muestra los datos de una fruta como vista de la base de datos",
+                    "summary": "Fruit data",
+                    "description": "Returns the data of a fruit",
                     "value": {
                         "fruit_id": 1,
-                        "common_name": "Manzana",
+                        "common_name": "Apple",
                         "scientific_name": "Malus domestica",
                         "family_id": 1,
-                        "season": "Invierno",
-                        "description": "La manzana es una fruta de color rojo brillante y textura suave."
+                        "family_name": "Malus",
+                        "season": "Winter",
+                        "description": "The apple is a red and soft fruit."
                     }
                 }
             ]
         }
     }
 
-class FruitDetailResponse(BaseModel):
-    common_name: str = Field(description="Nombre común de la fruta")
-    scientific_name: str = Field(description="Nombre científico de la fruta")
-    family_name: str = Field(description="Nombre de la familia de la fruta")
-    season: str = Field(description="Estación de la fruta")
-    description: str = Field(description="Descripción de la fruta")
-    model_config = {
-        "extra": "ignore",
-        "json_schema_extra": {
-            "examples": [
-                {
-                    "summary": "Datos de fruta (vista de usuario)",
-                    "description": "Muestra los datos de el nombre común, nombre científico, nombre de la familia, estación y descripción de la fruta",
-                    "value": {
-                        "common_name": "Manzana",
-                        "scientific_name": "Malus domestica",
-                        "family_name": "Malus",
-                        "season": "Invierno",
-                        "description": "La manzana es una fruta de color rojo brillante y textura suave."
-                    }
-                }
-            ]
-        }
-    }
 
 class FruitSearch(OptionalField):
     fruit_id: Optional[int] = Field(gt=0)
@@ -94,36 +72,36 @@ class FruitSearch(OptionalField):
         "json_schema_extra": {
             "examples": [
                 {
-                    "summary": "Buscar una fruta",
-                    "description": "Buscar una fruta por su ID",
+                    "summary": "Search by fruit_id",
+                    "description": "Search a fruit by its ID",
                     "value": {
                         "fruit_id": 1
                     }
                 },
                 {
-                    "summary": "Buscar una fruta por su nombre común",
-                    "description": "Buscar una fruta por su nombre común",
+                    "summary": "Search by common_name",
+                    "description": "Search a fruit by its common name",
                     "value": {
-                        "common_name": "Manzana"
+                        "common_name": "Apple"
                     }
                 },
                 {
-                    "summary": "Buscar una fruta por su nombre científico",
-                    "description": "Buscar una fruta por su nombre científico",
+                    "summary": "Search by scientific_name",
+                    "description": "Search a fruit by its scientific name",
                     "value": {
                         "scientific_name": "Malus domestica"
                     }
                 },
                 {
-                    "summary": "Buscar una fruta por su estación",
-                    "description": "Buscar una fruta por su estación",
+                    "summary": "Search by season",
+                    "description": "Search a fruit by its season",
                     "value": {
-                        "season": "Invierno"
+                        "season": "Winter"
                     }
                 },
                 {
-                    "summary": "Buscar una fruta por su familia",
-                    "description": "Buscar una fruta por su familia",
+                    "summary": "Search by family_id",
+                    "description": "Search a fruit by its family ID",
                     "value": {
                         "family_id": 1
                     }
@@ -144,42 +122,42 @@ class FruitUpdate(OptionalField):
         "json_schema_extra": {
             "examples": [
                 {
-                    "summary": "Actualizar una fruta",
-                    "description": "Actualizar una fruta con los siguientes datos",
+                    "summary": "Update a fruit",
+                    "description": "Update a fruit with the following data",
                     "value": {
-                        "common_name": "Manzana",
+                        "common_name": "Apple",
                         "scientific_name": "Malus domestica",
                         "family_id": 1,
-                        "season": "Invierno",
-                        "description": "La manzana es una fruta de color rojo brillante y textura suave."
+                        "season": "Winter",
+                        "description": "The apple is a red and soft fruit."
                     }
                 },
                 {
-                    "summary": "Actualizar el nombre común de una fruta",
-                    "description": "Actualizar el nombre común de una fruta",
+                    "summary": "Update the common name of a fruit",
+                    "description": "Update the common name of a fruit",
                     "value": {
-                        "common_name": "Manzana"
+                        "common_name": "Apple"
                     }
                 },
                 {
-                    "summary": "Actualizar el nombre científico de una fruta",
-                    "description": "Actualizar el nombre científico de una fruta",
+                    "summary": "Update the scientific name of a fruit",
+                    "description": "Update the scientific name of a fruit",
                     "value": {
                         "scientific_name": "Malus domestica"
                     }
                 },
                 {
-                    "summary": "Actualizar la estación de una fruta",
-                    "description": "Actualizar la estación de una fruta",
+                    "summary": "Update the season of a fruit",
+                    "description": "Update the season of a fruit",
                     "value": {
-                        "season": "Invierno"
+                        "season": "Winter"
                     }
                 },
                 {
-                    "summary": "Actualizar la descripción de una fruta",
-                    "description": "Actualizar la descripción de una fruta",
+                    "summary": "Update the description of a fruit",
+                    "description": "Update the description of a fruit",
                     "value": {
-                        "description": "La manzana es una fruta de color rojo brillante y textura suave."
+                        "description": "The apple is a red and soft fruit."
                     }
                 }
             ]

@@ -9,49 +9,33 @@ class FruitRegionBase(BaseModel):
     }
     
 class FruitRegionResponse(FruitRegionBase):
+    fruit_name: str = Field(min_length=3, max_length=50, description="Name of the fruit")
+    region_name: str = Field(min_length=3, max_length=50, description="Name of the region")
     model_config = {
         "extra": "ignore",
         "json_schema_extra": {
             "examples": [
                 {
-                    "summary": "Datos de fruta en una región (vista de BD)",
-                    "description": "Muestra los datos de una fruta en una región como vista de la base de datos",
+                    "summary": "Fruit region data",
+                    "description": "Returns the data of a fruit in a region",
                     "value": {
                         "fruit_id": 1,
                         "region_id": 1,
-                    }
-                }
-            ]
-        }
-    }
-
-class FruitRegionDetailResponse(BaseModel):
-    fruit_name: str = Field(description="Nombre de la fruta")
-    region_name: str = Field(description="Nombre de la región")
-    
-    model_config = {
-        "extra": "ignore",
-        "json_schema_extra": {
-            "examples": [
-                {
-                    "summary": "Datos de fruta en una región (vista de usuario)",
-                    "description": "Muestra los datos de el nombre de la fruta y el nombre de la región a la que pertenece",
-                    "value": {
-                        "fruit_name": "Manzana",
+                        "fruit_name": "Apple",
                         "region_name": "Chocó",
                     }
                 }
             ]
         }
     }
-    
+
 class FruitRegionCreate(FruitRegionBase):
     model_config = {
         "json_schema_extra": {
             "examples": [
                 {
-                    "summary": "Crear una fruta en una región",
-                    "description": "Crear una fruta en una región con los siguientes datos",
+                    "summary": "Create a fruit in a region",
+                    "description": "Create a fruit in a region with the following data",
                     "value": {
                         "fruit_id": 1,
                         "region_id": 1,

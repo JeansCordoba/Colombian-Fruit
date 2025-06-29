@@ -9,9 +9,9 @@ class OptionalField(BaseModel):
             raise HTTPException(status_code=400, detail="At least one field must be provided")
 
 class RegionBase(BaseModel):
-    name: str = Field(min_length=3, max_length=50, description="Nombre de la región")
-    weather: str = Field(min_length=3, max_length=50, description="Clima de la región")
-    altitude: int = Field(gt=0, le=5000, description="Altura de la región en metros")
+    name: str = Field(min_length=3, max_length=50, description="Name of the region")
+    weather: str = Field(min_length=3, max_length=50, description="Weather of the region")
+    altitude: int = Field(gt=0, le=5000, description="Altitude of the region in meters")
 
 
 class RegionCreate(RegionBase):
@@ -20,11 +20,11 @@ class RegionCreate(RegionBase):
         "json_schema_extra": {
             "examples": [
                 {
-                "summary": "Crear una región",
-                "description": "Crear una región con los siguientes datos",
+                "summary": "Create a region",
+                "description": "Create a region with the following data",
                 "value": {
                     "name": "Andes",
-                    "weather": "Templado",
+                    "weather": "Temperate",
                     "altitude": 1000
                 }
             }
@@ -38,34 +38,12 @@ class RegionResponse(RegionBase):
         "json_schema_extra": {
             "examples": [
                 {
-                    "summary": "Datos de región (vista de BD)",
-                    "description": "Muestra los datos de una región como vista de la base de datos",
+                    "summary": "Region data",
+                    "description": "Returns the data of a region",
                     "value": {
                         "region_id": 1,
                         "name": "Andes",
-                        "weather": "Templado",
-                        "altitude": 1000
-                    }
-                }
-            ]
-        }
-    }
-
-class RegionDetailResponse(BaseModel):
-    name: str = Field(description="Nombre de la región")
-    weather: str = Field(description="Clima de la región")
-    altitude: int = Field(description="Altura de la región en metros")
-    model_config = {
-        "extra": "ignore",
-        "json_schema_extra": {
-            "examples": [
-                {
-                    "summary": "Datos de región (vista de usuario)",
-                    "description": "Muestra los datos de el nombre, clima y altitud de la región",
-    
-                    "value": {
-                        "name": "Andes",
-                        "weather": "Templado",
+                        "weather": "Temperate",
                         "altitude": 1000
                     }
                 }
@@ -82,31 +60,31 @@ class RegionUpdate(OptionalField):
         "json_schema_extra": {
             "examples": [
                 {
-                    "summary": "Actualizar una región",
-                    "description": "Actualizar todos los campos de una región con los siguientes datos",
+                    "summary": "Update a region",
+                    "description": "Update all the fields of a region with the following data",
                     "value": {
                         "name": "Andes",
-                        "weather": "Templado",
+                        "weather": "Temperate",
                         "altitude": 1000
                     }
                 },
                 {
-                    "summary": "Actualizar el nombre de una región",
-                    "description": "Actualizar el nombre de una región",
+                    "summary": "Update the name of a region",
+                    "description": "Update the name of a region",
                     "value": {
                         "name": "Andes"
                     }
                 },
                 {
-                    "summary": "Actualizar el clima de una región",
-                    "description": "Actualizar el clima de una región",
+                    "summary": "Update the weather of a region",
+                    "description": "Update the weather of a region",
                     "value": {
-                        "weather": "Templado"
+                        "weather": "Temperate"
                     }
                 },
                 {
-                    "summary": "Actualizar la altitud de una región",
-                    "description": "Actualizar la altitud de una región",
+                    "summary": "Update the altitude of a region",
+                    "description": "Update the altitude of a region",
                     "value": {
                         "altitude": 1000
                     }
@@ -125,29 +103,29 @@ class RegionSearch(OptionalField):
         "json_schema_extra": {
             "examples": [
                 {
-                    "summary": "Buscar por region_id",
-                    "description": "Buscar una región por su ID",
+                    "summary": "Search by region_id",
+                    "description": "Search a region by its ID",
                     "value": {
                         "region_id": 1
                     }
                 },
                 {
-                    "summary": "Buscar por nombre",
-                    "description": "Buscar una región por su nombre",
+                    "summary": "Search by name",
+                    "description": "Search a region by its name",
                     "value": {
                         "name": "Andes"
                     }
                 },
                 {
-                    "summary": "Buscar por clima",
-                    "description": "Buscar una región por su clima",
+                    "summary": "Search by weather",
+                    "description": "Search a region by its weather",
                     "value": {
-                        "weather": "Templado"
+                        "weather": "Temperate"
                     }
                 },
                 {
-                    "summary": "Buscar por altitud",
-                    "description": "Buscar una región por su altitud",
+                    "summary": "Search by altitude",
+                    "description": "Search a region by its altitude",
                     "value": {
                         "altitude": 1000
                     }

@@ -13,8 +13,8 @@ class OptionalField(BaseModel):
     }
 
 class DepartmentBase(BaseModel):
-    name: str = Field(min_length=3, max_length=50, description="Nombre del departamento")
-    region_id: int = Field(gt=0, description="ID de la región del departamento")
+    name: str = Field(min_length=3, max_length=50, description="Name of the department")
+    region_id: int = Field(gt=0, description="ID of the region of the department")
     
     model_config = {
         "extra": "forbid",
@@ -25,8 +25,8 @@ class DepartmentCreate(DepartmentBase):
         "json_schema_extra": {
             "examples": [
                 {
-                "summary": "Crear un departamento",
-                "description": "Crear un departamento con los siguientes datos",
+                "summary": "Create a department",
+                "description": "Create a department with the following data",
                     "value": {
                         "name": "Chocó",
                         "region_id": 2
@@ -38,43 +38,26 @@ class DepartmentCreate(DepartmentBase):
 
 class DepartmentResponse(DepartmentBase):
     department_id: int = Field(gt=0)
+    region_name: str = Field(min_length=3, max_length=50, description="Name of the region")
     
     model_config = {
         "extra": "ignore",
         "json_schema_extra": {
             "examples": [
                 {
-                    "summary": "Datos de departamento (vista de BD)",
-                    "description": "Muestra los datos de un departamento como vista de la base de datos",
+                    "summary": "Department data",
+                    "description": "Returns the data of a department",
                     "value": {
                         "department_id": 1,
                         "name": "Chocó",
-                        "region_id": 2
-                    }
-                }
-            ]
-        }
-    }
-
-class DepartmentDetailResponse(BaseModel):
-    name: str = Field(description="Nombre del departamento")
-    region_name: str = Field(description="Nombre de la región")
-    
-    model_config = {
-        "extra": "ignore",
-        "json_schema_extra": {
-            "examples": [
-                {
-                    "summary": "Datos de departamento (vista de usuario)",
-                    "description": "Muestra los datos de el nombre del departamento y la región a la que pertenece",
-                    "value": {
-                        "name": "Chocó",
+                        "region_id": 2,
                         "region_name": "Pacífico"
                     }
                 }
             ]
         }
     }
+
 
 class DepartmentSearch(OptionalField):
     department_id: Optional[int] = Field(gt=0)
@@ -86,29 +69,29 @@ class DepartmentSearch(OptionalField):
         "json_schema_extra": {
             "examples": [
                 {
-                    "summary": "Buscar por department_id",
-                    "description": "Buscar un departamento por su ID",
+                    "summary": "Search by department_id",
+                    "description": "Search a department by its ID",
                     "value": {
                         "department_id": 1
                     }
                 },
                 {
-                    "summary": "Buscar por nombre",
-                    "description": "Buscar un departamento por su nombre",
+                    "summary": "Search by name",
+                    "description": "Search a department by its name",
                     "value": {
                         "name": "Chocó"
                     }
                 },
                 {
-                    "summary": "Buscar por region_id",
-                    "description": "Buscar un departamento por su ID de región",
+                    "summary": "Search by region_id",
+                    "description": "Search a department by its region ID",
                     "value": {
                         "region_id": 2
                     }
                 },
                 {
-                    "summary": "Buscar por nombre de región",
-                    "description": "Buscar un departamento por el nombre de la región",
+                    "summary": "Search by region name",
+                    "description": "Search a department by the name of the region",
                     "value": {
                         "region_name": "Pacífico"
                     }
@@ -125,23 +108,23 @@ class DepartmentUpdate(OptionalField):
         "json_schema_extra": {
             "examples": [
                 {
-                    "summary": "Actualizar un departamento",
-                    "description": "Actualizar todos los campos de un departamento con los siguientes datos",
+                    "summary": "Update a department",
+                    "description": "Update all the fields of a department with the following data",
                     "value": {
                         "name": "Chocó",
                         "region_id": 2
                     }
                 },
                 {
-                    "summary": "Actualizar el nombre de un departamento",
-                    "description": "Actualizar el nombre de un departamento",
+                    "summary": "Update the name of a department",
+                    "description": "Update the name of a department",
                     "value": {
                         "name": "Chocó"
                     }
                 },
                 {
-                    "summary": "Actualizar la región de un departamento",
-                    "description": "Actualizar la región de un departamento",
+                    "summary": "Update the region of a department",
+                    "description": "Update the region of a department",
                     "value": {
                         "region_id": 2
                     }

@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Path, Body
-from ..schemas import FamilyCreate, FamilyUpdate, FamilySearch, FamilyResponse, FamilyDetailResponse
+from ..schemas import FamilyCreate, FamilyUpdate, FamilySearch, FamilyResponse
 from ..services import FamilyService
 
 router = APIRouter()
@@ -14,28 +14,13 @@ async def get_families():
     families = FamilyService.get_all_families()
     return families
 
-@router.get("/detail", response_model=list[FamilyDetailResponse])
-async def get_families_detail():
-    families = FamilyService.get_all_families()
-    return families
-
 @router.get("/{family_id}", response_model=FamilyResponse)
 async def get_family(family_id: int = Path(gt=0)):
     family = FamilyService.get_family_by_id(family_id)
     return family
 
-@router.get("/detail/{family_id}", response_model=FamilyDetailResponse)
-async def get_family_detail(family_id: int = Path(gt=0)):
-    family = FamilyService.get_family_by_id(family_id)
-    return family
-
 @router.get("/search", response_model=list[FamilyResponse])
 async def search_families(search: FamilySearch = Body(...)):
-    families = FamilyService.search_families(search)
-    return families
-
-@router.get("/search/detail", response_model=list[FamilyDetailResponse])
-async def search_families_detail(search: FamilySearch = Body(...)):
     families = FamilyService.search_families(search)
     return families
 

@@ -1,13 +1,13 @@
-# Modelos base (sin dependencias)
+# Base models (without dependencies)
 from .type_plant_model import TypePlant
 from .region_model import Region
 
-# Modelos que dependen de los base
-from .family_model import Family  # Depende de TypePlant
-from .department_model import Department  # Depende de Region
+# Models that depend on the base models
+from .family_model import Family  # TypePlant depends of Family
+from .department_model import Department  # Region depends of Department
 
-# Modelos con relaciones many-to-many
-from .fruit_model import Fruit  # Depende de Family
-from .fruit_region_model import FruitRegion  # Depende de Fruit y Region
+# Models with many-to-many relationships
+from .fruit_model import Fruit  # Family depends of Fruit
+from .fruit_region_model import FruitRegion  # Fruit and Region depends of FruitRegion
 
 __all__ = ["Department", "Family", "FruitRegion", "Fruit", "Region", "TypePlant"]

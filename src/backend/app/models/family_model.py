@@ -5,7 +5,7 @@ class Family(SQLModel, table=True):
     name: str = Field(index=True)
     type_plant_id: int
     description: str 
-    # Relaciones
+    # Relationships
     fruits: list["Fruit"] = Relationship(back_populates="family")
     
     def __repr__(self):

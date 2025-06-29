@@ -14,9 +14,9 @@ class OptionalField(BaseModel):
     }
 
 class FamilyBase(BaseModel):
-    name: str = Field(min_length=3, max_length=50, description="Nombre de la familia")
-    type_plant_id: int = Field(gt=0, description="ID del tipo de planta de la familia")
-    description: str = Field(min_length=3, max_length=1000, description="Descripción de la familia")
+    name: str = Field(min_length=3, max_length=50, description="Name of the family")
+    type_plant_id: int = Field(gt=0, description="ID of the type of plant of the family")
+    description: str = Field(min_length=3, max_length=1000, description="Description of the family")
 
     model_config = {
         "extra": "forbid",
@@ -27,12 +27,12 @@ class FamilyCreate(FamilyBase):
         "json_schema_extra": {
             "examples": [
                 {
-                    "summary": "Crear una familia",
-                    "description": "Crear una familia con los siguientes datos",
+                    "summary": "Create a family",
+                    "description": "Create a family with the following data",
                     "value": {
-                        "name": "Familia de las frutas",
+                        "name": "Fruit family",
                         "type_plant_id": 1,
-                        "description": "Descripción de la familia"
+                        "description": "Description of the family"
                     }
                 }
             ]
@@ -41,45 +41,26 @@ class FamilyCreate(FamilyBase):
     
 class FamilyResponse(FamilyBase):
     family_id: int = Field(gt=0)
+    type_plant_name: str = Field(min_length=3, max_length=50, description="Name of the type of plant")
     model_config = {
         "extra": "ignore",
         "json_schema_extra": {
             "examples": [
                 {
-                    "summary": "Datos de familia (vista de BD)",
-                    "description": "Muestra los datos de una familia como vista de la base de datos",
+                    "summary": "Family data",
+                    "description": "Returns the data of a family",
                     "value": {
                         "family_id": 1,
-                        "name": "Familia de las frutas",
+                        "name": "Fruit family",
                         "type_plant_id": 1,
-                        "description": "Descripción de la familia"
+                        "type_plant_name": "Tree",
+                        "description": "Description of the family"
                     }
                 }
             ]
         }
     }
-    
-class FamilyDetailResponse(BaseModel):
-    name: str = Field(description="Nombre de la familia")
-    type_plant_name: str = Field(description="Nombre del tipo de planta")
-    description: str = Field(description="Descripción de la familia")
-    
-    model_config = {
-        "extra": "ignore",
-        "json_schema_extra": {
-            "examples": [
-                {
-                    "summary": "Datos de familia (vista de usuario)",
-                    "description": "Muestra los datos de el nombre de la familia y el tipo de planta a la que pertenece",
-                    "value": {
-                        "name": "Familia de las frutas",
-                        "type_plant_name": "Árbol",
-                        "description": "Descripción de la familia"
-                    }
-                }
-            ]
-        }
-    }   
+     
   
 class FamilySearch(OptionalField):
     family_id: Optional[int] = Field(gt=0)
@@ -90,22 +71,22 @@ class FamilySearch(OptionalField):
         "json_schema_extra": {
             "examples": [
                 {
-                    "summary": "Buscar una familia",
-                    "description": "Buscar una familia por su nombre",
+                    "summary": "Search by name",
+                    "description": "Search a family by its name",
                     "value": {
-                        "name": "Familia de las frutas"
+                        "name": "Fruit family"
                     }
                 },
                 {
-                    "summary": "Buscar una familia por su ID",
-                    "description": "Buscar una familia por su ID",
+                    "summary": "Search by family_id",
+                    "description": "Search a family by its ID",
                     "value": {
                         "family_id": 1
                     }
                 },
                 {
-                    "summary": "Buscar una familia por su tipo de planta",
-                    "description": "Buscar una familia por su tipo de planta",
+                    "summary": "Search by type_plant_id",
+                    "description": "Search a family by its type of plant ID",
                     "value": {
                         "type_plant_id": 1
                     }
@@ -123,33 +104,33 @@ class FamilyUpdate(OptionalField):
         "json_schema_extra": {
             "examples": [
                 {
-                    "summary": "Actualizar una familia",
-                    "description": "Actualizar una familia con los siguientes datos",
+                    "summary": "Update a family",
+                    "description": "Update a family with the following data",
                     "value": {
-                        "name": "Familia de las frutas",
+                        "name": "Fruit family",
                         "type_plant_id": 1,
-                        "description": "Descripción de la familia"
+                        "description": "Description of the family"
                     }
                 },
                 {
-                    "summary": "Actualizar el nombre de una familia",
-                    "description": "Actualizar el nombre de una familia",
+                    "summary": "Update the name of a family",
+                    "description": "Update the name of a family",
                     "value": {
-                        "name": "Familia de las frutas"
+                        "name": "Fruit family"
                     }
                 },
                 {
-                    "summary": "Actualizar el tipo de planta de una familia",
-                    "description": "Actualizar el tipo de planta de una familia",
+                    "summary": "Update the type of plant of a family",
+                    "description": "Update the type of plant of a family",
                     "value": {
                         "type_plant_id": 1
                     }
                 },
                 {
-                    "summary": "Actualizar la descripción de una familia",
-                    "description": "Actualizar la descripción de una familia",
+                    "summary": "Update the description of a family",
+                    "description": "Update the description of a family",
                     "value": {
-                        "description": "Descripción de la familia"
+                        "description": "Description of the family"
                     }
                 }
             ]

@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Path, Body
-from ..schemas import TypePlantResponse, TypePlantCreate, TypePlantUpdate, TypePlantSearch, TypePlantDetailResponse
+from ..schemas import TypePlantResponse, TypePlantCreate, TypePlantUpdate, TypePlantSearch
 from ..services import TypePlantService
 
 router = APIRouter()
@@ -14,28 +14,13 @@ async def get_types_plants():
     type_plants = TypePlantService.get_all_type_plants()
     return type_plants
 
-@router.get("/detail", response_model=list[TypePlantDetailResponse])
-async def get_types_plants_detail():
-    type_plants = TypePlantService.get_all_type_plants()
-    return type_plants
-
 @router.get("/{type_plant_id}", response_model=TypePlantResponse)
 async def get_type_plant(type_plant_id: int = Path(gt=0)):
     type_plant = TypePlantService.get_type_plant_by_id(type_plant_id)
     return type_plant
 
-@router.get("/detail/{type_plant_id}", response_model=TypePlantDetailResponse)
-async def get_type_plant_detail(type_plant_id: int = Path(gt=0)):
-    type_plant = TypePlantService.get_type_plant_by_id(type_plant_id)
-    return type_plant
-
 @router.get("/search", response_model=list[TypePlantResponse])
 async def search_type_plants(search: TypePlantSearch = Body(...)):
-    type_plants = TypePlantService.search_type_plants(search)
-    return type_plants
-
-@router.get("/search/detail", response_model=list[TypePlantDetailResponse])
-async def search_type_plants_detail(search: TypePlantSearch = Body(...)):
     type_plants = TypePlantService.search_type_plants(search)
     return type_plants
 

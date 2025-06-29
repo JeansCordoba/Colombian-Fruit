@@ -7,7 +7,7 @@ class Region(SQLModel, table=True):
     weather: str
     altitude: int
     
-    # Relaciones
+    # Relationships
     fruits: list["Fruit"] = Relationship(
         back_populates="regions",
         link_model=FruitRegion,

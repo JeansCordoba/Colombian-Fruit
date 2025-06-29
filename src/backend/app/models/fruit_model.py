@@ -9,7 +9,7 @@ class Fruit(SQLModel, table=True):
     season: str = Field(index=True)
     description: str = Field(index=True)
     
-    # Relaciones
+    # Relationships
     family: "Family" = Relationship(back_populates="fruits")
     regions: list["Region"] = Relationship(
         back_populates="fruits",

@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Path, Body
-from ..schemas import RegionCreate, RegionUpdate, RegionSearch, RegionResponse, RegionDetailResponse, FruitRegionResponse, FruitRegionDetailResponse
+from ..schemas import RegionCreate, RegionUpdate, RegionSearch, RegionResponse, FruitRegionResponse
 from ..services import RegionService
 
 router = APIRouter()
@@ -14,18 +14,8 @@ async def get_regions():
     regions = RegionService.get_all_regions()
     return regions
 
-@router.get("/detail", response_model=list[RegionDetailResponse])
-async def get_regions_detail():
-    regions = RegionService.get_all_regions()
-    return regions
-
 @router.get("/{region_id}", response_model=RegionResponse)
 async def get_region(region_id: int = Path(gt=0)):
-    region = RegionService.get_region_by_id(region_id)
-    return region
-
-@router.get("/detail/{region_id}", response_model=RegionDetailResponse)
-async def get_region_detail(region_id: int = Path(gt=0)):
     region = RegionService.get_region_by_id(region_id)
     return region
 
@@ -34,18 +24,8 @@ async def get_region_fruits(region_id: int = Path(gt=0)):
     region_fruits = RegionService.get_region_fruits(region_id)
     return region_fruits
 
-@router.get("/fruits/detail/{region_id}", response_model=list[FruitRegionDetailResponse])
-async def get_region_fruits_detail(region_id: int = Path(gt=0)):
-    region_fruits = RegionService.get_region_fruits(region_id)
-    return region_fruits
-
 @router.get("/search", response_model=list[RegionResponse])
 async def search_regions(search: RegionSearch = Body(...)):
-    regions = RegionService.search_regions(search)
-    return regions
-
-@router.get("/search/detail", response_model=list[RegionDetailResponse])
-async def search_regions_detail(search: RegionSearch = Body(...)):
     regions = RegionService.search_regions(search)
     return regions
 

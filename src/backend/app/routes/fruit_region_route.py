@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Path, Body
-from ..schemas import FruitRegionCreate, FruitRegionResponse, FruitRegionDetailResponse
+from ..schemas import FruitRegionCreate, FruitRegionResponse
 from ..services import FruitRegionService
 
 router = APIRouter()
@@ -10,10 +10,6 @@ async def add_region_to_fruit(fruit_region: FruitRegionCreate = Body(...)):
 
 @router.get("/", response_model=list[FruitRegionResponse])
 async def get_all_fruit_regions():
-    return FruitRegionService.get_all_fruit_regions()
-
-@router.get("/detail", response_model=list[FruitRegionDetailResponse])
-async def get_all_fruit_regions_detail():
     return FruitRegionService.get_all_fruit_regions()
 
 @router.delete("/", status_code=204)

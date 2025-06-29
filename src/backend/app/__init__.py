@@ -8,15 +8,15 @@ async def lifespan(app: FastAPI):
     create_db_and_tables()
     yield
 
-# Crear la aplicación FastAPI
+# Build the FastAPI app
 app = FastAPI(
     title="Colombian Fruits API",
-    description="API para gestionar frutas colombianas",
+    description="API to manage Colombian fruits",
     version="1.0.0",
     lifespan=lifespan
 )
 
-# Registrar las rutas
+# Register the routes
 app.include_router(fruits_route.router, prefix="/api/v1/fruits", tags=["fruits"])
 app.include_router(departments_route.router, prefix="/api/v1/departments", tags=["departments"])
 app.include_router(regions_route.router, prefix="/api/v1/regions", tags=["regions"])

@@ -5,7 +5,7 @@ class Department(SQLModel, table=True):
     name: str 
     region_id: int = Field(foreign_key="region.region_id")
     
-    # Relaciones
+    # Relationships
     region: "Region" = Relationship(back_populates="departments")
     
     def __repr__(self):

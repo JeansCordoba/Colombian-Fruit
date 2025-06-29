@@ -9,7 +9,7 @@ class OptionalField(BaseModel):
             raise HTTPException(status_code=400, detail="At least one field must be provided")
 
 class TypePlantBase(BaseModel):
-    name: str = Field(min_length=3, max_length=50, description="Nombre del tipo de planta")
+    name: str = Field(min_length=3, max_length=50, description="Name of the type of plant")
     model_config = {
         "extra": "forbid",
     }
@@ -19,10 +19,10 @@ class TypePlantCreate(TypePlantBase):
         "json_schema_extra": {
             "examples": [
                 {
-                    "summary": "Crear un tipo de planta",
-                    "description": "Crear un tipo de planta con los siguientes datos",
+                    "summary": "Create a type of plant",
+                    "description": "Create a type of plant with the following data",
                     "value": {
-                        "name": "Árbol"
+                        "name": "Tree"
                     }
                 }
             ]
@@ -35,43 +35,27 @@ class TypePlantResponse(TypePlantBase):
         "json_schema_extra": {
             "examples": [
                 {
-                    "summary": "Datos de tipo de planta (vista de BD)",
-                    "description": "Muestra los datos de un tipo de planta como vista de la base de datos",
+                    "summary": "Type plant data",
+                    "description": "Returns the data of a type of plant",
                     "value": {
                         "type_plant_id": 1,
-                        "name": "Árbol"
+                        "name": "Tree"
                     }
                 }
             ]
         }
     }
 
-class TypePlantDetailResponse(BaseModel):
-    name: str = Field(description="Nombre del tipo de planta")
-    model_config = {
-        "extra": "ignore",
-        "json_schema_extra": {
-            "examples": [
-                {
-                    "summary": "Datos de tipo de planta (vista de usuario)",
-                    "description": "Muestra los datos de el nombre del tipo de planta",
-                    "value": {
-                        "name": "Árbol"
-                    }
-                }
-            ]
-        }
-    }
 
 class TypePlantUpdate(TypePlantBase):
     model_config = {
         "json_schema_extra": {
             "examples": [
                 {
-                    "summary": "Actualizar un tipo de planta",
-                    "description": "Actualizar un tipo de planta con los siguientes datos",
+                    "summary": "Update a type of plant",
+                    "description": "Update a type of plant with the following data",
                     "value": {
-                        "name": "Árbol"
+                        "name": "Tree"
                     }
                 }
             ]
@@ -86,25 +70,25 @@ class TypePlantSearch(OptionalField):
         "json_schema_extra": {
             "examples": [
                 {
-                    "summary": "Buscar un tipo de planta",
-                    "description": "Buscar un tipo de planta por nombre con los siguientes datos",
+                    "summary": "Search by type_plant_id",
+                    "description": "Search a type of plant by its ID",
                     "value": {
                         "type_plant_id": 1,
-                        "name": "Árbol"
+                        "name": "Tree"
                     }
                 },
                 {
-                    "summary": "Buscar un tipo de planta por ID",
-                    "description": "Buscar un tipo de planta por ID",
+                    "summary": "Search by type_plant_id",
+                    "description": "Search a type of plant by its ID",
                     "value": {
                         "type_plant_id": 1
                     }
                 },
                 {
-                    "summary": "Buscar un tipo de planta por nombre",
-                    "description": "Buscar un tipo de planta por nombre",
+                    "summary": "Search by name",
+                    "description": "Search a type of plant by its name",
                     "value": {
-                        "name": "Árbol"
+                        "name": "Tree"
                     }
                 }
             ]
