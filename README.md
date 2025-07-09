@@ -13,12 +13,14 @@ Este proyecto está en desarrollo activo y puede experimentar cambios significat
 - La documentación puede quedar desactualizada temporalmente
 
 ### Completado
-- Estructura del proyecto y arquitectura en capas
-- Modelos de datos con relaciones
-- Endpoints básicos implementados
-- Base de datos semilla con datos reales
-- Configuración Docker funcional
-- Serialización de respuestas corregida
+- ✅ Estructura del proyecto y arquitectura en capas
+- ✅ Modelos de datos con relaciones
+- ✅ Endpoints básicos implementados
+- ✅ Base de datos semilla con datos reales
+- ✅ Configuración Docker funcional
+- ✅ Serialización de respuestas corregida
+- ✅ Refactorización completa del backend
+- ✅ Documentación mejorada
 
 ### Pendiente
 - **Autenticación y autorización** (JWT)
@@ -28,6 +30,7 @@ Este proyecto está en desarrollo activo y puede experimentar cambios significat
 - **Documentación de API** completa
 - **Optimización de consultas** de base de datos
 - **Frontend** para consumir la API
+- **Logging y middleware** de errores
 
 ## Características
 
@@ -35,10 +38,11 @@ Este proyecto está en desarrollo activo y puede experimentar cambios significat
 - **Base de datos PostgreSQL** con datos semilla de frutas colombianas
 - **Arquitectura en capas**: Models, Schemas, Services, Routes
 - **Docker** para containerización
-- **58 endpoints** implementados para gestión completa de datos
+- **38 endpoints** implementados para gestión completa de datos
 - **Relaciones complejas** entre frutas, regiones, departamentos, familias y tipos de planta
 - **Búsquedas avanzadas** con filtros por nombre y descripción
 - **Respuestas detalladas** con información relacionada
+- **Alto rendimiento** y escalabilidad
 
 ## Próximos Pasos
 
@@ -54,15 +58,15 @@ Este proyecto está en desarrollo activo y puede experimentar cambios significat
    - Pruebas de integración para endpoints
 
 ### Prioridad Media
-3. **Desarrollar frontend**
+3. **Implementar logging y middleware**
+   - Logging estructurado para debugging
+   - Middleware para manejo global de errores
+   - Monitoreo de performance
+
+4. **Desarrollar frontend**
    - Interfaz de usuario para consumir la API
    - Dashboard de administración
    - Visualización de datos
-
-4. **Mejorar validación y manejo de errores**
-   - Validaciones personalizadas más robustas
-   - Mensajes de error más descriptivos
-   - Logging estructurado
 
 ### Prioridad Baja
 5. **Optimizar rendimiento**
@@ -89,6 +93,7 @@ Este proyecto está en desarrollo activo y puede experimentar cambios significat
 - [Uso](#uso)
 - [API Endpoints](#api-endpoints)
 - [Modelos de Datos](#modelos-de-datos)
+- [Características Avanzadas](#características-avanzadas)
 - [Contribución](#contribución)
 - [Licencia](#licencia)
 
@@ -123,7 +128,7 @@ Colombian_fruits/
 │   │   ├── tests/               # Pruebas unitarias e integración
 │   │   │   ├── test_models/     # Pruebas de modelos
 │   │   │   ├── test_services/   # Pruebas de servicios
-│   │   │   └── test_ruotes/     # Pruebas de rutas
+│   │   │   └── test_routes/     # Pruebas de rutas
 │   │   ├── env/                 # Entorno virtual Python
 │   │   ├── requirements.txt     # Dependencias Python
 │   │   ├── Dockerfile          # Configuración Docker
@@ -183,11 +188,6 @@ docker-compose up -d
 POSTGRES_USER=your_user
 POSTGRES_PASSWORD=your_password
 POSTGRES_DB=colombian_fruits_db
-
-# Variables para la aplicación (conexión a la base de datos)
-POSTGRES_USER=your_user
-POSTGRES_PASSWORD=your_password
-POSTGRES_DB=colombian_fruits_db
 POSTGRES_HOST=colombian-fruits-db
 ```
 
@@ -222,80 +222,62 @@ docker-compose exec api-colombian-fruits python -m app.utilities.seed
 
 ## API Endpoints
 
-**Total: 58 endpoints implementados**
+**Total: 38 endpoints implementados**
 
-### Frutas (Fruits) - 12 endpoints
-- POST /api/v1/fruits/ - Crear fruta
-- GET /api/v1/fruits/ - Listar todas las frutas
-- GET /api/v1/fruits/detail - Listar con detalles
-- GET /api/v1/fruits/{id} - Obtener fruta por ID
-- GET /api/v1/fruits/detail/{id} - Obtener con detalles
-- GET /api/v1/fruits/regions/{id} - Obtener regiones de fruta
-- GET /api/v1/fruits/regions/detail/{id} - Obtener regiones con detalles
-- GET /api/v1/fruits/search - Buscar frutas
-- GET /api/v1/fruits/search/detail - Buscar con detalles
-- PATCH /api/v1/fruits/{id} - Actualizar fruta
-- DELETE /api/v1/fruits/{id} - Eliminar fruta
+### Frutas (Fruits) - 7 endpoints
+- `POST /api/v1/fruits/` - Crear fruta
+- `GET /api/v1/fruits/` - Listar todas las frutas
+- `GET /api/v1/fruits/{fruit_id}` - Obtener fruta por ID
+- `GET /api/v1/fruits/regions/{fruit_id}` - Obtener regiones de una fruta
+- `GET /api/v1/fruits/search` - Buscar frutas
+- `PATCH /api/v1/fruits/{fruit_id}` - Actualizar fruta
+- `DELETE /api/v1/fruits/{fruit_id}` - Eliminar fruta
 
-### Regiones (Regions) - 12 endpoints
-- POST /api/v1/regions/ - Crear región
-- GET /api/v1/regions/ - Listar todas las regiones
-- GET /api/v1/regions/detail - Listar con detalles
-- GET /api/v1/regions/{id} - Obtener región por ID
-- GET /api/v1/regions/detail/{id} - Obtener con detalles
-- GET /api/v1/regions/fruits/{id} - Obtener frutas de región
-- GET /api/v1/regions/fruits/detail/{id} - Obtener frutas con detalles
-- GET /api/v1/regions/search - Buscar regiones
-- GET /api/v1/regions/search/detail - Buscar con detalles
-- PATCH /api/v1/regions/{id} - Actualizar región
-- DELETE /api/v1/regions/{id} - Eliminar región
+### Regiones (Regions) - 7 endpoints
+- `POST /api/v1/regions/` - Crear región
+- `GET /api/v1/regions/` - Listar todas las regiones
+- `GET /api/v1/regions/{region_id}` - Obtener región por ID
+- `GET /api/v1/regions/fruits/{region_id}` - Obtener frutas de una región
+- `GET /api/v1/regions/search` - Buscar regiones
+- `PATCH /api/v1/regions/{region_id}` - Actualizar región
+- `DELETE /api/v1/regions/{region_id}` - Eliminar región
 
-### Departamentos (Departments) - 10 endpoints
-- POST /api/v1/departments/ - Crear departamento
-- GET /api/v1/departments/ - Listar todos los departamentos
-- GET /api/v1/departments/detail - Listar con detalles
-- GET /api/v1/departments/{id} - Obtener departamento por ID
-- GET /api/v1/departments/detail/{id} - Obtener con detalles
-- GET /api/v1/departments/search - Buscar departamentos
-- GET /api/v1/departments/search/detail - Buscar con detalles
-- PATCH /api/v1/departments/{id} - Actualizar departamento
-- DELETE /api/v1/departments/{id} - Eliminar departamento
+### Departamentos (Departments) - 7 endpoints
+- `POST /api/v1/departments/` - Crear departamento
+- `GET /api/v1/departments/` - Listar todos los departamentos
+- `GET /api/v1/departments/{department_id}` - Obtener departamento por ID
+- `GET /api/v1/departments/search` - Buscar departamentos
+- `PATCH /api/v1/departments/{department_id}` - Actualizar departamento
+- `DELETE /api/v1/departments/{department_id}` - Eliminar departamento
 
-### Familias (Families) - 10 endpoints
-- POST /api/v1/families/ - Crear familia
-- GET /api/v1/families/ - Listar todas las familias
-- GET /api/v1/families/detail - Listar con detalles
-- GET /api/v1/families/{id} - Obtener familia por ID
-- GET /api/v1/families/detail/{id} - Obtener con detalles
-- GET /api/v1/families/search - Buscar familias
-- GET /api/v1/families/search/detail - Buscar con detalles
-- PATCH /api/v1/families/{id} - Actualizar familia
-- DELETE /api/v1/families/{id} - Eliminar familia
+### Familias (Families) - 7 endpoints
+- `POST /api/v1/families/` - Crear familia
+- `GET /api/v1/families/` - Listar todas las familias
+- `GET /api/v1/families/{family_id}` - Obtener familia por ID
+- `GET /api/v1/families/search` - Buscar familias
+- `PATCH /api/v1/families/{family_id}` - Actualizar familia
+- `DELETE /api/v1/families/{family_id}` - Eliminar familia
 
-### Tipos de Planta (Type Plants) - 10 endpoints
-- POST /api/v1/type-plants/ - Crear tipo de planta
-- GET /api/v1/type-plants/ - Listar todos los tipos
-- GET /api/v1/type-plants/detail - Listar con detalles
-- GET /api/v1/type-plants/{id} - Obtener tipo por ID
-- GET /api/v1/type-plants/detail/{id} - Obtener con detalles
-- GET /api/v1/type-plants/search - Buscar tipos
-- GET /api/v1/type-plants/search/detail - Buscar con detalles
-- PATCH /api/v1/type-plants/{id} - Actualizar tipo
-- DELETE /api/v1/type-plants/{id} - Eliminar tipo
+### Tipos de Planta (Type Plants) - 7 endpoints
+- `POST /api/v1/type-plants/` - Crear tipo de planta
+- `GET /api/v1/type-plants/` - Listar todos los tipos
+- `GET /api/v1/type-plants/{type_plant_id}` - Obtener tipo por ID
+- `GET /api/v1/type-plants/search` - Buscar tipos
+- `PATCH /api/v1/type-plants/{type_plant_id}` - Actualizar tipo
+- `DELETE /api/v1/type-plants/{type_plant_id}` - Eliminar tipo
 
-### Relaciones Fruta-Región - 4 endpoints
-- POST /api/v1/fruit-regions/ - Crear relación
-- GET /api/v1/fruit-regions/ - Listar todas las relaciones
-- GET /api/v1/fruit-regions/detail - Listar con detalles
-- DELETE /api/v1/fruit-regions/ - Eliminar relación
+### Relaciones Fruta-Región - 3 endpoints
+- `POST /api/v1/fruit-regions/` - Crear relación fruta-región
+- `GET /api/v1/fruit-regions/` - Listar todas las relaciones
+- `DELETE /api/v1/fruit-regions/{fruit_id}/{region_id}` - Eliminar relación fruta-región
 
 ## Modelos de Datos
 
 ### Entidades Principales
-- **Fruit**: Frutas con nombre común, científico, familia, temporada
-- **Region**: Regiones geográficas de Colombia
+- **Fruit**: Frutas con nombre común, científico, familia, temporada y descripción
+- **Region**: Regiones geográficas de Colombia con clima y altitud
 - **Department**: Departamentos de Colombia
-- **Family**: Familias botánicas
+- **Family**: Familias botánicas con descripción
 - **TypePlant**: Tipos de plantas (árbol, arbusto, etc.)
 
 ### Relaciones
@@ -307,7 +289,7 @@ docker-compose exec api-colombian-fruits python -m app.utilities.seed
 ## Características Avanzadas
 
 ### Búsquedas Inteligentes
-- Búsqueda por texto con `ILIKE`
+- Búsqueda por texto con filtros `ILIKE`
 - Filtros múltiples combinados
 - Búsqueda por relaciones (ej: frutas por región)
 - Validación de acentos y mayúsculas/minúsculas
@@ -322,6 +304,12 @@ docker-compose exec api-colombian-fruits python -m app.utilities.seed
 - Múltiples formatos de respuesta según el endpoint
 - Serialización automática de relaciones
 - Configuración de campos extra (ignore/forbid)
+
+### Funcionalidades Especiales
+- Gestión completa de frutas colombianas
+- Mapeo de regiones y departamentos
+- Clasificación botánica por familias
+- Relaciones fruta-región para análisis geográfico
 
 ## Contribución
 
