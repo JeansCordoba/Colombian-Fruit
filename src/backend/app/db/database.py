@@ -1,13 +1,15 @@
-from sqlmodel import SQLModel, create_engine, Session
+from sqlmodel import SQLModel
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
+from sqlalchemy.engine import URL
 from dotenv import load_dotenv
 import os
-from contextlib import contextmanager
-from sqlalchemy.engine import URL
+from typing import AsyncGenerator
 
 load_dotenv()
 
+# Create async database URL
 url = URL.create(
-    drivername="postgresql",
+    drivername="postgresql+asyncpg",
     username=os.getenv('POSTGRES_USER'),
     password=os.getenv('POSTGRES_PASSWORD'),
     host=os.getenv('POSTGRES_HOST'),
@@ -15,15 +17,30 @@ url = URL.create(
     database=os.getenv('POSTGRES_DB')
 )
 
-engine = create_engine(url)
+# Create async engine
+engine = create_async_engine(
+    url,
+    echo=False,  # Set to True for SQL query logging
+    pool_pre_ping=True,
+    pool_recycle=300
+)
 
-def create_db_and_tables():
-    SQLModel.metadata.create_all(engine)
+# Create async session factory
+async_session = async_sessionmaker(
+    engine,
+    class_=AsyncSession,
+    expire_on_commit=False
+)
 
-@contextmanager
-def get_session():
-    session = Session(engine)
-    try:
-        yield session
-    finally:
-        session.close()
+async def create_db_and_tables():
+    """Create database tables asynchronously."""
+    async with engine.begin() as conn:
+        await conn.run_sync(SQLModel.metadata.create_all)
+
+async def get_session() -> AsyncGenerator[AsyncSession, None]:
+    """Dependency to get async database session."""
+    async with async_session() as session:
+        try:
+            yield session
+        finally:
+            await session.close()

@@ -1,89 +1,115 @@
-from ..db import get_session
+from sqlmodel import select
+from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi import HTTPException
 from ..models import Family, TypePlant
 from ..utilities import Utilities
-from fastapi import HTTPException
-from sqlmodel import select
+from typing import List, Dict, Any
 
-class FamilyService:
-    @staticmethod
-    def _serialize_family(family):
-        return {
-            "family_id": family.family_id,
-            "name": family.name,
-            "type_plant_id": family.type_plant_id,
-            "description": family.description
-        }
+
+def _serialize_family(family: Family) -> Dict[str, Any]:
+    """Serialize family model to dictionary response."""
+    return {
+        "family_id": family.family_id,
+        "name": family.name,
+        "type_plant_id": family.type_plant_id,
+        "description": family.description
+    }
+
+
+async def create_family(family_data, session: AsyncSession) -> Dict[str, Any]:
+    """Create a new family asynchronously."""
+    # Check for existing families with same name
+    existing_families = await session.exec(select(Family)).all()
+    normalized_new_name = Utilities.remove_accents(family_data.name.lower())
     
-    @staticmethod
-    def create_family(family):
-        with get_session() as session:
-            existing_families = session.exec(select(Family)).all()
-            normalized_new_name = Utilities.remove_accents(family.name.lower())
-            for existing_family in existing_families:
-                if Utilities.remove_accents(existing_family.name.lower()) == normalized_new_name:
-                    raise HTTPException(status_code=400, detail="Family already exists")
-            if not session.exec(select(TypePlant).where(TypePlant.type_plant_id == family.type_plant_id)).first():
-                raise HTTPException(status_code=400, detail="Type plant not found")
-            new_family = Family(**family.model_dump())
-            session.add(new_family)
-            session.commit()
-            session.refresh(new_family)
-            return FamilyService._serialize_family(new_family)
+    for existing_family in existing_families:
+        if Utilities.remove_accents(existing_family.name.lower()) == normalized_new_name:
+            raise HTTPException(status_code=400, detail="Family already exists")
+    
+    # Verify type plant exists
+    type_plant = await session.exec(select(TypePlant).where(TypePlant.type_plant_id == family_data.type_plant_id)).first()
+    if not type_plant:
+        raise HTTPException(status_code=400, detail="Type plant not found")
+    
+    # Create new family
+    new_family = Family(**family_data.model_dump())
+    session.add(new_family)
+    await session.commit()
+    await session.refresh(new_family)
+    
+    return _serialize_family(new_family)
+
+
+async def get_all_families(session: AsyncSession) -> List[Dict[str, Any]]:
+    """Get all families asynchronously."""
+    families = await session.exec(select(Family)).all()
+    return [_serialize_family(family) for family in families]
+
+
+async def get_family_by_id(family_id: int, session: AsyncSession) -> Dict[str, Any]:
+    """Get a family by ID asynchronously."""
+    family = await session.exec(select(Family).where(Family.family_id == family_id)).first()
+    if not family:
+        raise HTTPException(status_code=404, detail="Family not found")
+    return _serialize_family(family)
+
+
+async def search_families(search_data, session: AsyncSession) -> List[Dict[str, Any]]:
+    """Search families by various criteria asynchronously."""
+    query = select(Family)
+    
+    if search_data.family_id:
+        query = query.where(Family.family_id == search_data.family_id)
+    if search_data.name:
+        query = query.where(Family.name.ilike(f"%{search_data.name}%"))
+    if search_data.type_plant_id:
+        query = query.where(Family.type_plant_id == search_data.type_plant_id)
+    
+    families = await session.exec(query).all()
+    if not families:
+        raise HTTPException(status_code=404, detail="No families found")
+    
+    return [_serialize_family(family) for family in families]
+
+
+async def update_family(family_id: int, update_data, session: AsyncSession) -> Dict[str, Any]:
+    """Update a family asynchronously."""
+    family = await session.exec(select(Family).where(Family.family_id == family_id)).first()
+    if not family:
+        raise HTTPException(status_code=404, detail="Family not found")
+    
+    # Check for name conflicts
+    if update_data.name:
+        existing_families = await session.exec(select(Family)).all()
+        normalized_new_name = Utilities.remove_accents(update_data.name.lower())
         
-    @staticmethod
-    def get_all_families():
-        with get_session() as session:
-            families = session.exec(select(Family)).all()
-            return [FamilyService._serialize_family(family) for family in families]
-        
-    @staticmethod
-    def get_family_by_id(family_id: int):
-        with get_session() as session:
-            result = session.exec(select(Family).where(Family.family_id == family_id)).first()
-            if not result:
-                raise HTTPException(status_code=404, detail="Family not found")
-            return FamilyService._serialize_family(result)
-        
-    @staticmethod
-    def search_families(search):
-        with get_session() as session:
-            query = select(Family)
-            if search.family_id:
-                query = query.where(Family.family_id == search.family_id)
-            if search.name:
-                query = query.where(Family.name.ilike(f"%{search.name}%"))
-            if search.type_plant_id:
-                query = query.where(Family.type_plant_id == search.type_plant_id)
-            families = query.all()
-            if not families:
-                raise HTTPException(status_code=404, detail="No families found")
-            return [FamilyService._serialize_family(family) for family in families]
-        
-    @staticmethod
-    def update_family(family_id: int, update_data):
-        with get_session() as session:
-            result = session.exec(select(Family).where(Family.family_id == family_id)).first()
-            if not result:
-                raise HTTPException(status_code=404, detail="Family not found")
-            if update_data.name:
-                normalized_new_name = Utilities.remove_accents(update_data.name.lower())
-                for existing_family in session.exec(select(Family)):
-                    if Utilities.remove_accents(existing_family.name.lower()) == normalized_new_name:
-                        raise HTTPException(status_code=400, detail="Family already exists")
-            if update_data.type_plant_id:
-                if not session.exec(select(TypePlant).where(TypePlant.type_plant_id == update_data.type_plant_id)).first():
-                    raise HTTPException(status_code=400, detail="Type plant not found")
-            family_data = update_data.model_dump()
-            session.exec(select(Family).where(Family.family_id == family_id)).update(family_data)
-            session.commit()
-            session.refresh(result)
-            return FamilyService._serialize_family(result)
-        
-    @staticmethod
-    def delete_family(family_id: int):
-        with get_session() as session:
-            result = session.exec(select(Family).where(Family.family_id == family_id)).first()
-            if not result:
-                raise HTTPException(status_code=404, detail="Family not found")
-            session.delete(result)
-            session.commit()
+        for existing_family in existing_families:
+            if (Utilities.remove_accents(existing_family.name.lower()) == normalized_new_name and
+                existing_family.family_id != family_id):
+                raise HTTPException(status_code=400, detail="Family already exists")
+    
+    # Verify type plant exists if updating
+    if update_data.type_plant_id:
+        type_plant = await session.exec(select(TypePlant).where(TypePlant.type_plant_id == update_data.type_plant_id)).first()
+        if not type_plant:
+            raise HTTPException(status_code=400, detail="Type plant not found")
+    
+    # Update family
+    family_data = update_data.model_dump(exclude_unset=True)
+    for field, value in family_data.items():
+        setattr(family, field, value)
+    
+    await session.commit()
+    await session.refresh(family)
+    
+    return _serialize_family(family)
+
+
+async def delete_family(family_id: int, session: AsyncSession) -> None:
+    """Delete a family asynchronously."""
+    family = await session.exec(select(Family).where(Family.family_id == family_id)).first()
+    if not family:
+        raise HTTPException(status_code=404, detail="Family not found")
+    
+    await session.delete(family)
+    await session.commit()

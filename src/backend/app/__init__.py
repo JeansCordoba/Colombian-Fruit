@@ -1,11 +1,11 @@
 from fastapi import FastAPI
-from .db import create_db_and_tables
+from .db.database import create_db_and_tables
 from .routes import departments_route, fruits_route, regions_route, type_plant_route, family_route, fruit_region_route
 from contextlib import asynccontextmanager
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    create_db_and_tables()
+    await create_db_and_tables()
     yield
 
 # Build the FastAPI app
